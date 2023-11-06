@@ -1,0 +1,43 @@
+import sqlite3
+def crear_tabla():
+    conn = sqlite3.connect("notas.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS notas (
+            id INTEGER PRIMARY KEY,
+            nota TEXT
+        )
+    """)
+    conn.commit()
+    conn.close()
+def insertar_nota(nota):
+    conn = sqlite3.connect("notas.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO notas (nota) VALUES (?)", (nota,))
+    conn.commit()
+    conn.close()
+
+def calcular_promedio():
+    conn = sqlite3.connect("notas.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT nota FROM notas")
+    notas = cursor.fetchall()
+    conn.close()
+
+    if notas:
+        total_puntos = sum(letras_a_numeros[nota] for nota in notas)
+        promedio = total_puntos / len(notas)
+        return promedio
+    else:
+        return None
+
+letras_a_numeros = {'A': 91, 'B': 81, 'C': 71, 'D': 61, 'F': 60}
+crear_tabla()
+num_notas = int(input("Ingrese la cantidad de notas parciales: "))
+for i in range(num_notas):
+    nota = input(f"Ingrese la nota {i + 1} (A, B, C, D, F): ").upper()
+    if nota in letras_a_numeros:
+promedio = calcular_promedio()
+if promedio is not None:
+    print("Sus notas son:", [nota[0] for nota in notas])
+    print("Su promedio es:", promedio)
